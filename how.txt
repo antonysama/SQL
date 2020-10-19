@@ -6,8 +6,11 @@ docker-compose up
 # To connect to table 
 docker exec -it sql_db_1 psql -U postgres 
 
-#To run script: 
+#To create view: 
 \i /var/lib/postgresql/data/data/script3.sql # (script2.sql or script3.sql can also be used)
+
+#Run script
+SELECT * FROM three;
 
 #To clean up
 docker-compose down
