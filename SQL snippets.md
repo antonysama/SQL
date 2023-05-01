@@ -28,7 +28,39 @@ WHERE ProductionMonth BETWEEN'2022-01-01' AND '2023-04-01'
 GROUP BY  ProductionMonth
 ORDER BY ProductionMonth;
 
+**Create Master table**
+IF OBJECT_ID('tempdb..#Master', 'U') IS NOT NULL
+    DROP TABLE #Master
+
+SELECT a.ProductionMonth, b.FXCADUSD, c.AgencyFees000CAD, d.Actl_AcidGas_000CAD --, e., f.* --Master table
+INTO #Master
+FROM
+ufxeadOSMonthlyRevenueForecastTVF (getutcdate()) a 
+LEFT JOIN ufxeadOSMonthlyViewTVF (getutcdate()) b ON a.ProductionMonth = b.ProductionPeriod
+LEFT JOIN ufxeadOilProductionTVF (getUTCdate()) c ON a.ProductionMonth = c.ProductionPeriod
+LEFT JOIN ufxeadGasTVF (getUTCdate()) d ON a.ProductionMonth = d.ProductionPeriod
+LEFT JOIN ufxeadLandSaleTVF(getUTCdate()) e  ON a.ProductionMonth  = e.YearMonth
+LEFT JOIN ufxeadRentalDataTVF (getutcdate()) f  on a.ProductionMonth=b.ProductionPeriod;
+SELECT * FROM #Master
+
 **qarter v Quarter comparision w. sub query & case**
+SELECT u.FiscalYear, u.FX
+FROM (
+    SELECT 
+        CASE
+            WHEN a.ProductionMonth >= '2021-04-01' AND a.ProductionMonth < '2022-04-01' THEN 2021 
+            WHEN a.ProductionMonth >= '2022-04-01' AND a.ProductionMonth < '2023-04-01' THEN 2022 
+        END AS FiscalYear, 
+        AVG(a.FXCADUSD) AS FX 
+    FROM #Master AS a
+    WHERE a.ProductionMonth BETWEEN '2021-04-01' AND '2023-04-01'
+    GROUP BY CASE
+            WHEN a.ProductionMonth >= '2021-04-01' AND a.ProductionMonth < '2022-04-01' THEN 2021 
+            WHEN a.ProductionMonth >= '2022-04-01' AND a.ProductionMonth < '2023-04-01' THEN 2022 
+        END
+) AS u;
+
+**OR**
 SELECT TY.MONTH, TY.BPD AS TY_BPD, LY.BPD AS LY_BPD 
 FROM
     (SELECT DATENAME(month, ProductionPeriod) AS MONTH, SUM(EORP * 6.29234 / DATEPART(day, EOMONTH(ProductionPeriod))) as BPD
@@ -61,17 +93,4 @@ FROM
     WHERE ProductionPeriod BETWEEN '2021-04-01' AND '2023-03-01') AS u
 GROUP BY FiscalYear;
 
-**Create Master table**
-IF OBJECT_ID('tempdb..#Master', 'U') IS NOT NULL
-    DROP TABLE #Master
 
-SELECT a.ProductionMonth, b.FXCADUSD, c.AgencyFees000CAD, d.Actl_AcidGas_000CAD --, e., f.* --Master table
-INTO #Master
-FROM
-ufxeadOSMonthlyRevenueForecastTVF (getutcdate()) a 
-LEFT JOIN ufxeadOSMonthlyViewTVF (getutcdate()) b ON a.ProductionMonth = b.ProductionPeriod
-LEFT JOIN ufxeadOilProductionTVF (getUTCdate()) c ON a.ProductionMonth = c.ProductionPeriod
-LEFT JOIN ufxeadGasTVF (getUTCdate()) d ON a.ProductionMonth = d.ProductionPeriod
-LEFT JOIN ufxeadLandSaleTVF(getUTCdate()) e  ON a.ProductionMonth  = e.YearMonth
-LEFT JOIN ufxeadRentalDataTVF (getutcdate()) f  on a.ProductionMonth=b.ProductionPeriod;
-SELECT * FROM #Master
