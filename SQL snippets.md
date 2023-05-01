@@ -62,7 +62,10 @@ FROM
 GROUP BY FiscalYear;
 
 **Create Master table**
-SELECT a.ActualEstimate, b.FXCADUSD, c.AgencyFees000CAD, d.Actl_AcidGas_000CAD --, e., f. etc
+IF OBJECT_ID('tempdb..#Master', 'U') IS NOT NULL
+    DROP TABLE #Master
+
+SELECT a.ProductionMonth, b.FXCADUSD, c.AgencyFees000CAD, d.Actl_AcidGas_000CAD --, e., f.* --Master table
 INTO #Master
 FROM
 ufxeadOSMonthlyRevenueForecastTVF (getutcdate()) a 
@@ -71,4 +74,4 @@ LEFT JOIN ufxeadOilProductionTVF (getUTCdate()) c ON a.ProductionMonth = c.Produ
 LEFT JOIN ufxeadGasTVF (getUTCdate()) d ON a.ProductionMonth = d.ProductionPeriod
 LEFT JOIN ufxeadLandSaleTVF(getUTCdate()) e  ON a.ProductionMonth  = e.YearMonth
 LEFT JOIN ufxeadRentalDataTVF (getutcdate()) f  on a.ProductionMonth=b.ProductionPeriod;
--- SELECT * FROM #Master
+SELECT * FROM #Master
