@@ -1,4 +1,4 @@
-** info on columns for each view, table or sp**
+**info on columns for each view, table or sp**
 sp_columns ufxeadOSMonthlyRevenueForecastTVF 
 
 **who's reaching payout based on accruals?**
@@ -6,7 +6,7 @@ SELECT  *
 FROM ufxeadOSProjectTVF (getUTCdate())
 WHERE ActualPayoutDate BETWEEN'2021' AND '2025'
 
-** Rp & Rq based on accruals **
+**Rp & Rq based on accruals**
 SELECT ProductionPeriod,  ARFRpL, ARFRpM, ARFRpH, ARFRpU, MRFRpL, MRFRpM, MRFRpH, MRFRpU, RqL, RqM, RqH, RqU, MRFRq  
 FROM ufxeadOilProductionTVF(getutcdate())
 WHERE ProductionPeriod BETWEEN '2021-12-01' AND '2024-12-01'
@@ -28,7 +28,7 @@ WHERE ProductionMonth BETWEEN'2022-01-01' AND '2023-04-01'
 GROUP BY  ProductionMonth
 ORDER BY ProductionMonth;
 
-** qarter v Quarter comparision w. sub query & case**
+**qarter v Quarter comparision w. sub query & case**
 SELECT TY.MONTH, TY.BPD AS TY_BPD, LY.BPD AS LY_BPD 
 FROM
     (SELECT DATENAME(month, ProductionPeriod) AS MONTH, SUM(EORP * 6.29234 / DATEPART(day, EOMONTH(ProductionPeriod))) as BPD
@@ -61,7 +61,7 @@ FROM
     WHERE ProductionPeriod BETWEEN '2021-04-01' AND '2023-03-01') AS u
 GROUP BY FiscalYear;
 
- ** Create Master table**
+**Create Master table**
 SELECT a.ActualEstimate, b.FXCADUSD, c.AgencyFees000CAD, d.Actl_AcidGas_000CAD --, e., f. etc
 INTO #Master
 FROM
