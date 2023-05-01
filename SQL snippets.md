@@ -44,23 +44,6 @@ LEFT JOIN ufxeadRentalDataTVF (getutcdate()) f  on a.ProductionMonth=b.Productio
 SELECT * FROM #Master
 
 **qarter v Quarter comparision w. sub query & case**
-SELECT u.FiscalYear, u.FX
-FROM (
-    SELECT 
-        CASE
-            WHEN a.ProductionMonth >= '2021-04-01' AND a.ProductionMonth < '2022-04-01' THEN 2021 
-            WHEN a.ProductionMonth >= '2022-04-01' AND a.ProductionMonth < '2023-04-01' THEN 2022 
-        END AS FiscalYear, 
-        AVG(a.FXCADUSD) AS FX 
-    FROM #Master AS a
-    WHERE a.ProductionMonth BETWEEN '2021-04-01' AND '2023-04-01'
-    GROUP BY CASE
-            WHEN a.ProductionMonth >= '2021-04-01' AND a.ProductionMonth < '2022-04-01' THEN 2021 
-            WHEN a.ProductionMonth >= '2022-04-01' AND a.ProductionMonth < '2023-04-01' THEN 2022 
-        END
-) AS u;
-
-**OR**
 SELECT TY.MONTH, TY.BPD AS TY_BPD, LY.BPD AS LY_BPD 
 FROM
     (SELECT DATENAME(month, ProductionPeriod) AS MONTH, SUM(EORP * 6.29234 / DATEPART(day, EOMONTH(ProductionPeriod))) as BPD
@@ -81,6 +64,23 @@ ORDER BY CASE TY.MONTH
     END;
 
 **Year v Year comparision w. sub query & case**
+SELECT u.FiscalYear, u.FX
+FROM (
+    SELECT 
+        CASE
+            WHEN a.ProductionMonth >= '2021-04-01' AND a.ProductionMonth < '2022-04-01' THEN 2021 
+            WHEN a.ProductionMonth >= '2022-04-01' AND a.ProductionMonth < '2023-04-01' THEN 2022 
+        END AS FiscalYear, 
+        AVG(a.FXCADUSD) AS FX 
+    FROM #Master AS a
+    WHERE a.ProductionMonth BETWEEN '2021-04-01' AND '2023-04-01'
+    GROUP BY CASE
+            WHEN a.ProductionMonth >= '2021-04-01' AND a.ProductionMonth < '2022-04-01' THEN 2021 
+            WHEN a.ProductionMonth >= '2022-04-01' AND a.ProductionMonth < '2023-04-01' THEN 2022 
+        END
+) AS u;
+
+**OR**
 SELECT FiscalYear, SUM(BPD) AS SUM_BPD 
 FROM 
     (SELECT
