@@ -44,6 +44,27 @@ LEFT JOIN ufxeadRentalDataTVF (getutcdate()) f  on a.ProductionMonth=b.Productio
 SELECT * FROM #Master
 
 **qarter v Quarter comparision w. sub query & case**
+SELECT TY.MONTH, TY.Acid AS TY_Acid, LY.Acid AS LY_Acid 
+FROM
+    (SELECT DATENAME(month, ProductionMonth) AS MONTH, AVG(Actl_AcidGas_000CAD) as Acid
+    FROM #Master
+    WHERE ProductionMonth BETWEEN '2021-04-01' AND '2021-06-01'
+    GROUP BY DATENAME(month, ProductionMonth)) AS LY
+INNER JOIN 
+    (SELECT DATENAME(month, ProductionMonth) AS MONTH, AVG(Actl_AcidGas_000CAD) as Acid
+    FROM  #Master
+    WHERE ProductionMonth BETWEEN '2022-04-01' AND '2022-06-01'
+    GROUP BY DATENAME(month, ProductionMonth)) AS TY
+ON LY.MONTH = TY.MONTH
+GROUP BY TY.MONTH, TY.Acid, LY.Acid
+ORDER BY CASE TY.MONTH
+    WHEN 'April' THEN 1
+    WHEN 'May' THEN 2
+    WHEN 'June' THEN 3
+    END;
+
+**OR**
+
 SELECT TY.MONTH, TY.BPD AS TY_BPD, LY.BPD AS LY_BPD 
 FROM
     (SELECT DATENAME(month, ProductionPeriod) AS MONTH, SUM(EORP * 6.29234 / DATEPART(day, EOMONTH(ProductionPeriod))) as BPD
