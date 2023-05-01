@@ -1,23 +1,28 @@
 **info on columns for each view, table or sp**
+
 sp_columns ufxeadOSMonthlyRevenueForecastTVF 
 
 **who's reaching payout based on accruals?**
+
 SELECT  *  
 FROM ufxeadOSProjectTVF (getUTCdate())
 WHERE ActualPayoutDate BETWEEN'2021' AND '2025'
 
 **Rp & Rq based on accruals**
+
 SELECT ProductionPeriod,  ARFRpL, ARFRpM, ARFRpH, ARFRpU, MRFRpL, MRFRpM, MRFRpH, MRFRpU, RqL, RqM, RqH, RqU, MRFRq  
 FROM ufxeadOilProductionTVF(getutcdate())
 WHERE ProductionPeriod BETWEEN '2021-12-01' AND '2024-12-01'
 
 **EORP  but assuming its units are m3?**
+
 SELECT  ProductionPeriod, SUM(EORP * 6.29234 / DATEPART(day, EOMONTH(ProductionPeriod))) as barrels_per_daY 
 FROM  ufxeadOilProductionTVF(getUTCdate())
 WHERE ProductionPeriod BETWEEN'2020-12-01' AND '2022-11-01'
 GROUP BY  ProductionPeriod;
 
  **Until when do we have actuals?**
+ 
 SELECT ProductionMonth, Max(ActualEstimate) AS OS_ACTL_EST,
     --SUM(TotalCrudeBitumenProduction * 6.29234 / DATEPART(day, EOMONTH(ProductionMonth))) as barrels_per_daY,
     SUM (LTotalProd + MTotalProd + HTotalProd +  UTotalProd)* 6.29234 / DATEPART(day, EOMONTH(ProductionMonth)) AS CrudeBpd
@@ -29,6 +34,7 @@ GROUP BY  ProductionMonth
 ORDER BY ProductionMonth;
 
 **Create Master table**
+
 IF OBJECT_ID('tempdb..#Master', 'U') IS NOT NULL
     DROP TABLE #Master
 
@@ -44,6 +50,7 @@ LEFT JOIN ufxeadRentalDataTVF (getutcdate()) f  on a.ProductionMonth=b.Productio
 SELECT * FROM #Master
 
 **qarter v Quarter comparision w. sub query & case**
+
 SELECT TY.MONTH, TY.Acid AS TY_Acid, LY.Acid AS LY_Acid 
 FROM
     (SELECT DATENAME(month, ProductionMonth) AS MONTH, AVG(Actl_AcidGas_000CAD) as Acid
@@ -85,6 +92,7 @@ ORDER BY CASE TY.MONTH
     END;
 
 **Year v Year comparision w. sub query & case**
+
 SELECT u.FiscalYear, u.FX
 FROM (
     SELECT 
@@ -102,6 +110,7 @@ FROM (
 ) AS u;
 
 **OR**
+
 SELECT FiscalYear, SUM(BPD) AS SUM_BPD 
 FROM 
     (SELECT
