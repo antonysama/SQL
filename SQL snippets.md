@@ -35,14 +35,16 @@ ORDER BY ProductionMonth;
 
 **Create Master table**
 
+USE EAD_PROD
 IF OBJECT_ID('tempdb..#Master', 'U') IS NOT NULL
     DROP TABLE #Master
 SELECT a.ProductionMonth, SUM(a.TotalCrudeBitumenProduction * 6.29234 / DATEPART(day, EOMONTH(a.ProductionMonth))) AS bpd, SUM(a.OperatingCosts) AS Opex, 
-SUM(a.CapitalCosts) AS CAPEX, SUM(a.GrossRevenue) AS Revenue, SUM(a.CalculatedRoyalty) AS Royalty, MAX(a.FormType) AS PayoutStatus,  MAX(a.Region) AS Region, 
-AVG(b.WTI_USDBBL) AS WTI, AVG(b.WCSPriceUSDbbl) AS WCS, AVG(b.FXCADUSD) AS FX, AVG(b.ARPC1_CADGJ) AS ARP, SUM(b.NPR_CAD) AS NPR, SUM(c.NetRemittance000CAD) AS NetRemittance, 
-SUM(c.CondensateRoyalty_Amount) AS CondensateRoyalty, SUM(c.LTotalProd+c.MTotalProd+c.HTotalProd+c.UTotalProd) AS CrudeM3, SUM(d.NetGasRoyalty)AS GasRoyalty, 
-AVG(d.SulphurDefaultPrice_CADperTON) AS Sulphur_CDN_T , AVG(e.PNGBonus_Total) AS PNG_Bonus, AVG(e.PNGPricePerHectare_Total) AS PNG_Pr_Ha, AVG(e.OSBonus_Total) AS OS_Bonus, 
-AVG(f.PNGRentAndFees+ f.CoalRentAndFees+ f.OilSandsRentAndFees+ f.OtherRentAndFees)*-1 AS RentalAndFees
+SUM(a.CapitalCosts) AS CAPEX, SUM(a.GrossRevenue) AS Revenue, SUM(a.GrossRevenue)/SUM(a.TotalCrudeBitumenProduction * 6.29234) AS RealizedPrCDN,
+SUM(a.CalculatedRoyalty) AS Royalty,  MAX(a.Region) AS Region, AVG(b.WTI_USDBBL) AS WTI, AVG(b.WCSPriceUSDbbl) AS WCS_USD, AVG(b.FXCADUSD) AS FX, 
+AVG(b.WCSPriceUSDbbl)/AVG(b.FXCADUSD) WCS_CDN, AVG(b.ARPC1_CADGJ) AS ARP, AVG(b.NPR_CAD) AS NPR, AVG(c.NetRemittance000CAD) AS NetRemittance, 
+AVG(c.CondensateRoyalty_Amount) AS CondensateRoyalty, AVG(c.LTotalProd+c.MTotalProd+c.HTotalProd+c.UTotalProd) * 6.29234 / DATEPART(day, EOMONTH(a.ProductionMonth)) AS CrudeBPD, 
+AVG(d.NetGasRoyalty)AS GasRoyalty, AVG(d.SulphurDefaultPrice_CADperTON) AS Sulphur_CDN_T , AVG(e.PNGBonus_Total+e.OSBonus_Total) AS PNGOS_Bonus, 
+AVG(e.PNGPricePerHectare_Total) AS PNG_Pr_Ha, AVG(f.PNGRentAndFees+ f.CoalRentAndFees+ f.OilSandsRentAndFees+ f.OtherRentAndFees)*-1 AS RentalAndFees --, MAX(a.FormType) AS PayoutStatus
 INTO #Master
 FROM
 ufxeadOSMonthlyRevenueForecastTVF (getutcdate()) a 
@@ -51,7 +53,8 @@ LEFT JOIN ufxeadOilProductionTVF (getUTCdate()) c ON a.ProductionMonth = c.Produ
 LEFT JOIN ufxeadGasTVF (getUTCdate()) d ON a.ProductionMonth = d.ProductionPeriod
 LEFT JOIN ufxeadLandSaleTVF(getUTCdate()) e  ON a.ProductionMonth  = e.YearMonth
 LEFT JOIN ufxeadRentalDataTVF (getutcdate()) f  on a.ProductionMonth=f.ProductionPeriod
-GROUP BY a.ProductionMonth;;
+WHERE ProductionMonth = '2022-12-01' --discretion
+GROUP BY a.ProductionMonth;
 --SELECT * FROM #Master
 
 **qarter v Quarter comparision w. sub query & case**
