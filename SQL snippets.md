@@ -37,8 +37,12 @@ ORDER BY ProductionMonth;
 
 IF OBJECT_ID('tempdb..#Master', 'U') IS NOT NULL
     DROP TABLE #Master
-
-SELECT a.ProductionMonth, b.FXCADUSD, c.AgencyFees000CAD, d.Actl_AcidGas_000CAD --, e., f.* --Master table
+SELECT a.ProductionMonth, SUM(a.TotalCrudeBitumenProduction * 6.29234 / DATEPART(day, EOMONTH(a.ProductionMonth))) AS bpd, SUM(a.OperatingCosts) AS Opex, 
+SUM(a.CapitalCosts) AS CAPEX, SUM(a.GrossRevenue) AS Revenue, SUM(a.CalculatedRoyalty) AS Royalty, MAX(a.FormType) AS PayoutStatus,  MAX(a.Region) AS Region, 
+AVG(b.WTI_USDBBL) AS WTI, AVG(b.WCSPriceUSDbbl) AS WCS, AVG(b.FXCADUSD) AS FX, AVG(b.ARPC1_CADGJ) AS ARP, SUM(b.NPR_CAD) AS NPR, SUM(c.NetRemittance000CAD) AS NetRemittance, 
+SUM(c.CondensateRoyalty_Amount) AS CondensateRoyalty, SUM(c.LTotalProd+c.MTotalProd+c.HTotalProd+c.UTotalProd) AS CrudeM3, SUM(d.NetGasRoyalty)AS GasRoyalty, 
+AVG(d.SulphurDefaultPrice_CADperTON) AS Sulphur_CDN_T , AVG(e.PNGBonus_Total) AS PNG_Bonus, AVG(e.PNGPricePerHectare_Total) AS PNG_Pr_Ha, AVG(e.OSBonus_Total) AS OS_Bonus, 
+AVG(f.PNGRentAndFees+ f.CoalRentAndFees+ f.OilSandsRentAndFees+ f.OtherRentAndFees)*-1 AS RentalAndFees
 INTO #Master
 FROM
 ufxeadOSMonthlyRevenueForecastTVF (getutcdate()) a 
@@ -46,8 +50,9 @@ LEFT JOIN ufxeadOSMonthlyViewTVF (getutcdate()) b ON a.ProductionMonth = b.Produ
 LEFT JOIN ufxeadOilProductionTVF (getUTCdate()) c ON a.ProductionMonth = c.ProductionPeriod
 LEFT JOIN ufxeadGasTVF (getUTCdate()) d ON a.ProductionMonth = d.ProductionPeriod
 LEFT JOIN ufxeadLandSaleTVF(getUTCdate()) e  ON a.ProductionMonth  = e.YearMonth
-LEFT JOIN ufxeadRentalDataTVF (getutcdate()) f  on a.ProductionMonth=b.ProductionPeriod;
-SELECT * FROM #Master
+LEFT JOIN ufxeadRentalDataTVF (getutcdate()) f  on a.ProductionMonth=f.ProductionPeriod
+GROUP BY a.ProductionMonth;;
+--SELECT * FROM #Master
 
 **qarter v Quarter comparision w. sub query & case**
 
