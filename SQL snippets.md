@@ -43,8 +43,7 @@ SUM(a.CapitalCosts) AS CAPEX, SUM(a.GrossRevenue) AS Revenue, SUM(a.GrossRevenue
 SUM(a.CalculatedRoyalty) AS Royalty,  MAX(a.Region) AS Region, AVG(b.WTI_USDBBL) AS WTI, AVG(b.WCSPriceUSDbbl) AS WCS_USD, AVG(b.FXCADUSD) AS FX, 
 AVG(b.WCSPriceUSDbbl)/AVG(b.FXCADUSD) WCS_CDN, AVG(b.ARPC1_CADGJ) AS ARP, AVG(b.NPR_CAD) AS NPR, AVG(c.NetRemittance000CAD) AS NetRemittance, 
 AVG(c.CondensateRoyalty_Amount) AS CondensateRoyalty, AVG(c.LTotalProd+c.MTotalProd+c.HTotalProd+c.UTotalProd) * 6.29234 / DATEPART(day, EOMONTH(a.ProductionMonth)) AS CrudeBPD, 
-AVG(d.NetGasRoyalty)AS GasRoyalty, AVG(d.SulphurDefaultPrice_CADperTON) AS Sulphur_CDN_T , AVG(e.PNGBonus_Total+e.OSBonus_Total) AS PNGOS_Bonus, 
-AVG(e.PNGPricePerHectare_Total) AS PNG_Pr_Ha, AVG(f.PNGRentAndFees+ f.CoalRentAndFees+ f.OilSandsRentAndFees+ f.OtherRentAndFees)*-1 AS RentalAndFees --, MAX(a.FormType) AS PayoutStatus
+AVG(d.NetGasRoyalty)AS GasRoyalty, AVG(d.SulphurDefaultPrice_CADperTON) AS Sulphur_CDN_T , AVG(e.GAS_RoyaltyLiableHeatContent_000GJ) AS Gas_000GJ AVG(e.PNGBonus_Total+e.OSBonus_Total) AS PNGOS_Bonus, AVG(e.PNGPricePerHectare_Total) AS PNG_Pr_Ha, AVG(f.PNGRentAndFees+ f.CoalRentAndFees+ f.OilSandsRentAndFees+ f.OtherRentAndFees)*-1 AS RentalAndFees --, MAX(a.FormType) AS PayoutStatus
 INTO #Master
 FROM
 ufxeadOSMonthlyRevenueForecastTVF (getutcdate()) a 
