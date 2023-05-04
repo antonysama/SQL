@@ -139,12 +139,11 @@ GROUP BY Year_Submitted
 ORDER BY Year_Submitted;
 
 **Realized bitumen price of top 10 based on production**
-SELECT ProductionMonth,  (AVG(u.GrossRevenue)/(AVG(u.TotalCrudeBitumenProduction)* 6.29234)) AS RealizedPrice
+SELECT ProductionMonth,  (SUM(u.GrossRevenue)/(SUM(u.TotalCrudeBitumenProduction)* 6.29234)) AS RealizedPrice
 FROM
-    (SELECT TOP 12 ProjName, SUM(TotalCrudeBitumenProduction) AS TotalCrudeBitumenProduction , SUM(GrossRevenue) AS GrossRevenue, ProductionMonth
+    (SELECT ProjName, TotalCrudeBitumenProduction , GrossRevenue, ProductionMonth,
+        ROW_NUMBER() OVER (PARTITION BY ProductionMonth ORDER BY TotalCrudeBitumenProduction DESC) AS rn
     FROM ufxeadOSMonthlyRevenueForecastTVF (getUTCdate())
-    WHERE ProductionMonth BETWEEN'2023-01-01' AND '2023-12-01'
-    GROUP BY ProductionMonth, ProjName
-    ORDER BY TotalCrudeBitumenProduction DESC) AS u
+    WHERE ProductionMonth BETWEEN'2023-01-01' AND '2023-12-01') AS u
 GROUP BY  ProductionMonth
-ORDER BY ProductionMonth
+ORDER BY ProductionMonthh
