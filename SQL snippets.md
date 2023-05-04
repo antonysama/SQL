@@ -56,7 +56,7 @@ WHERE ProductionMonth = '2022-12-01' --discretion
 GROUP BY a.ProductionMonth;
 --SELECT * FROM #Master
 
-**qarter v Quarter comparision w. sub query & case**
+**Qarter v Quarter comparision w. sub query & case**
 
 SELECT TY.MONTH, TY.Acid AS TY_Acid, LY.Acid AS LY_Acid 
 FROM
@@ -77,7 +77,7 @@ ORDER BY CASE TY.MONTH
     WHEN 'June' THEN 3
     END;
 
-**OR**
+**or**
 
 SELECT TY.MONTH, TY.BPD AS TY_BPD, LY.BPD AS LY_BPD 
 FROM
@@ -116,7 +116,7 @@ FROM (
         END
 ) AS u;
 
-**OR**
+**or**
 
 SELECT FiscalYear, SUM(BPD) AS SUM_BPD 
 FROM 
@@ -131,3 +131,9 @@ FROM
 GROUP BY FiscalYear;
 
 
+**Strategic v Sustaining OS Capital Costs**
+SELECT Year_Submitted, ROUND(SUM(TotalStrategicCapitalCosts),0) AS TotalStrategicCapitalCosts, ROUND(SUM(TotalSustainingCapitalCosts),0) AS TotalSustainingCapitalCosts
+FROM ufxeadOSOperatorForecastSummaryTVF (getUTCdate())
+WHERE Year_Submitted=Forecast_Year
+GROUP BY Year_Submitted
+ORDER BY Year_Submitted;
