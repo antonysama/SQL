@@ -1,8 +1,8 @@
-**info on columns for each view, table or sp**
+**Info on columns for each view, table or sp**
 
 sp_columns ufxeadOSMonthlyRevenueForecastTVF 
 
-**who's reaching payout based on accruals?**
+**Who's reaching payout based on accruals?**
 
 SELECT  *  
 FROM ufxeadOSProjectTVF (getUTCdate())
