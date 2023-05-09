@@ -149,3 +149,9 @@ FROM
     WHERE ProductionMonth BETWEEN'2023-01-01' AND '2023-12-01') AS u
 GROUP BY  ProductionMonth
 ORDER BY ProductionMonthh
+
+**Wells spud b/w 2021-2023**
+USE EAD_PROD
+SELECT [Well Event ID], [Spud Date], [Well Location Top Latitude],  [Well Location Top Longitude]
+FROM eadWellEventView
+WHERE [Spud Date] >= '2021-01-01' AND [Spud Date] <= '2023-12-01'
