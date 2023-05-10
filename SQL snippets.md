@@ -152,6 +152,14 @@ ORDER BY ProductionMonthh
 
 **Wells spud b/w 2021-2023**
 USE EAD_PROD
-SELECT [Well Event ID], [Spud Date], [Well Location Top Latitude],  [Well Location Top Longitude]
+SELECT [Well Event ID], [Spud Date], [Well Location Top Latitude],  [Well Location Top Longitude], [Well Status Mode Desc]
 FROM eadWellEventView
-WHERE [Spud Date] >= '2021-01-01' AND [Spud Date] <= '2023-12-01'
+WHERE [Spud Date] >= '2021-01-01' 
+
+--Total & Null Counts Among The Lat & Lon, are all in 2022
+SELECT YEAR([Spud Date]) AS Year, COUNT(DISTINCT [Well Event ID]) AS TotCount,
+    SUM(CASE WHEN [Well Location Top Longitude] IS NULL THEN 1 ELSE 0 END) AS Longitude_Null_Count,
+    SUM(CASE WHEN [Well Location Top Latitude] IS NULL THEN 1 ELSE 0 END) AS Latitude_Null_Count
+FROM eadWellEventView
+WHERE [Spud Date] >= '2021-01-01' 
+GROUP BY YEAR([Spud Date])
