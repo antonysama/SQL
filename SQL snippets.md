@@ -150,11 +150,12 @@ FROM
 GROUP BY  ProductionMonth
 ORDER BY ProductionMonthh
 
-**Wells spud b/w 2021-2023**
+**Wells spud b/w 2020-2021**
 USE EAD_PROD
-SELECT [Well Event ID], [Spud Date], [Well Location Top Latitude],  [Well Location Top Longitude], [Well Status Mode Desc]
 FROM eadWellEventView
-WHERE [Spud Date] >= '2021-01-01' 
+WHERE [Spud Date] >= '2020-01-01' 
+AND [Well Status Mode Desc] NOT IN ('ABANDONED', 'ABANDONED & WHIPSTOCKED')
+ AND [Well Location Top Latitude] IS NOT NULL
 
 --Total & Null Counts Among The Lat & Lon, are all in 2022
 SELECT YEAR([Spud Date]) AS Year, COUNT(DISTINCT [Well Event ID]) AS TotCount,
