@@ -158,9 +158,10 @@ AND [Well Status Mode Desc] NOT IN ('ABANDONED', 'ABANDONED & WHIPSTOCKED')
  AND [Well Location Top Latitude] IS NOT NULL
 
 --Total & Null Counts Among The Lat & Lon, are all in 2022
-SELECT YEAR([Spud Date]) AS Year, COUNT(DISTINCT [Well Event ID]) AS TotCount,
+SELECT YEAR([Spud Date]) AS YEAR, COUNT(DISTINCT [Well Event ID] ) AS TotCount,
     SUM(CASE WHEN [Well Location Top Longitude] IS NULL THEN 1 ELSE 0 END) AS Longitude_Null_Count,
-    SUM(CASE WHEN [Well Location Top Latitude] IS NULL THEN 1 ELSE 0 END) AS Latitude_Null_Count
+    SUM(CASE WHEN [Well Location Top Latitude] IS NULL THEN 1 ELSE 0 END) AS Latitude_Null_Count,
+    CAST(SUM(CASE WHEN [Well Location Top Latitude] IS NULL THEN 1 ELSE 0 END) AS decimal)/ COUNT(DISTINCT [Well Event ID] )  AS Ratio
 FROM eadWellEventView
-WHERE [Spud Date] >= '2021-01-01' 
+WHERE [Spud Date] >= '2019-01-01'  AND [Spud Date] <= '2021-12-01'
 GROUP BY YEAR([Spud Date])
