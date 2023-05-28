@@ -165,3 +165,13 @@ SELECT YEAR([Spud Date]) AS YEAR, COUNT(DISTINCT [Well Event ID] ) AS TotCount,
 FROM eadWellEventView
 WHERE [Spud Date] >= '2019-01-01'  AND [Spud Date] <= '2021-12-01'
 GROUP BY YEAR([Spud Date])
+
+**declaring parameters**
+USE RFM_PROD
+
+DECLARE @priceScenarioID AS Int;
+--DECLARE @OSPDEYearSubmitted AS DATETIME = '2023-01-01' ;
+DECLARE @AsOfDate AS DATETIME2 = '2023-01-1';
+
+SELECT *
+FROM dbo.tvfPayoutStatus (@AsOfDate, @priceScenarioID)
