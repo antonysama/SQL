@@ -175,3 +175,14 @@ DECLARE @AsOfDate AS DATETIME2 = '2023-01-1';
 
 SELECT *
 FROM dbo.tvfPayoutStatus (@AsOfDate, @priceScenarioID)
+
+**overcome the division by 0 error**
+SELECT *
+FROM ufxeadCoalBITProductionSummaryTVF (GETUTCDATE())
+WHERE CASE
+         WHEN ISNULL(MarketableSales, 0) = 0 THEN 0 -- Handle zero divisor for Column1
+         WHEN ISNULL(ProductRevenue, 0) = 0 THEN 0 -- Handle zero divisor for Column2
+         WHEN ISNULL(Price, 0) = 0 THEN 0 -- Handle zero divisor for Column3
+         -- Add more columns as needed
+         ELSE 1 -- Non-zero divisor
+      END = 1
