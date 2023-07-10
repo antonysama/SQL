@@ -177,9 +177,12 @@ SELECT *
 FROM dbo.tvfPayoutStatus (@AsOfDate, @priceScenarioID)
 
 ----Another Example -----
-DECLARE @priceScenarioID AS Int; DECLARE @AsOfDate AS DATETIME2 = '2023-01-1';
-SELECT TOP (10) *
-FROM tvfRFMOilPayoutStatus (@AsOfDate, @priceScenarioID)
+
+USE RFM_PROD
+DECLARE @priceScenarioID AS Int; DECLARE @OSPDEYearSubmitted AS DATETIME = '2023-01-01' ; DECLARE @asOfDate AS DATETIME2 = '2023-01-1';
+SELECT Top (10) *
+FROM tvfCStar (@asOfDate, @priceScenarioID)
+--WHERE CStar IS NOT NULL;
 
 
 **overcome the division by 0 error**
