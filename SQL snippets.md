@@ -176,6 +176,12 @@ DECLARE @AsOfDate AS DATETIME2 = '2023-01-1';
 SELECT *
 FROM dbo.tvfPayoutStatus (@AsOfDate, @priceScenarioID)
 
+----Another Example -----
+DECLARE @priceScenarioID AS Int; DECLARE @AsOfDate AS DATETIME2 = '2023-01-1';
+SELECT TOP (10) *
+FROM tvfRFMOilPayoutStatus (@AsOfDate, @priceScenarioID)
+
+
 **overcome the division by 0 error**
 SELECT *
 FROM ufxeadCoalBITProductionSummaryTVF (GETUTCDATE())
