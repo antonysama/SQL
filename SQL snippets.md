@@ -195,3 +195,15 @@ WHERE CASE
          -- Add more columns as needed
          ELSE 1 -- Non-zero divisor
       END = 1
+**CAPP annual**
+--Server: EIPDB99S
+USE EAD_PROD 
+SELECT YEAR(a.ProductionPeriod), SUM(a.ARPC1_CADGJ * b.GAS_CrownInterestHeatContent_000GJ) AS GasValue
+--, b.C2SP_CrownInterestHeatContent_000GJ, b.C2MX_CrownInterestHeatContent_000GJ, b.C3SP_CrownInterestQuantity_000M3, b.C3MXReferencePrice_CADperM3
+FROM ufxeadOSMonthlyViewTVF (getUTCdate()) a 
+LEFT JOIN ufxeadGasTVF (getUTCdate()) b
+ON a.ProductionPeriod=b.ProductionPeriod 
+WHERE YEAR(a.ProductionPeriod)>2020 AND YEAR(a.ProductionPeriod)<2023
+GROUP BY YEAR(a.ProductionPeriod) 
+-- LTotalCrownProd, MTotalCrownProd,HTotalCrownProd, UTotalCrownProd, LightParPrice, MediumParPrice, HeavyParPrice, UHeavyParPrice
+--ufxeadOilProductionTVF  ufxeadGasTVF, ufxeadOSMonthlyViewTVF (getutcdate())
