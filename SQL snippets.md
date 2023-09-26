@@ -212,11 +212,11 @@ FROM ufxeadOSMonthlyViewTVF (getUTCdate()) a LEFT JOIN ufxeadGasTVF (getUTCdate(
 WHERE YEAR(a.ProductionPeriod)>2020 AND YEAR(a.ProductionPeriod)<2023
 GROUP BY DATEPART(YEAR, DATEADD(MONTH, -3, a.ProductionPeriod)) 
 
-**Total Gas (ARF+MRF) Production**
+**Total Gas (ARF+MRF) Production by Fiscal Year**
 --Server: EIPDB99S
 USE EAD_PROD 
-SELECT a.ProductionPeriod, GAS_RoyaltyLiableHeatContent_000GJ/1050 AS GAS_BCf, (GAS_RoyaltyLiableHeatContent_ARF_000GJ+GAS_RoyaltyLiableHeatContent_MRF_000GJ)/1050 AS GAS_BCf2 --DATEPART(YEAR, DATEADD(MONTH, -3, a.ProductionPeriod)) AS FiscalYear, SUM(GAS_RoyaltyLiableHeatContent_000GJ)/1050 AS GAS_BCf
+SELECT DATEPART(YEAR, DATEADD(MONTH, -3, a.ProductionPeriod)) AS FiscalYear, SUM(GAS_RoyaltyLiableHeatContent_000GJ)/1054.615 AS GAS_BCf, 
+SUM (GAS_RoyaltyLiableHeatContent_ARF_000GJ+GAS_RoyaltyLiableHeatContent_MRF_000GJ)/1054.615 AS GAS_BCf2 
 FROM ufxeadGasTVF (getUTCdate()) a
-WHERE YEAR(a.ProductionPeriod)>2019 AND YEAR(a.ProductionPeriod) <2021
---GROUP BY a.ProductionPeriod --DATEPART(YEAR, DATEADD(MONTH, -3, a.ProductionPeriod)) 
-ORDER BY a.ProductionPeriod
+WHERE YEAR(a.ProductionPeriod)>2021 AND YEAR(a.ProductionPeriod) <2024
+GROUP BY DATEPART(YEAR, DATEADD(MONTH, -3, a.ProductionPeriod)) 
