@@ -201,13 +201,13 @@ WHERE CASE
 --Server: EIPDB99S
 USE EAD_PROD 
 SELECT DATEPART(YEAR, DATEADD(MONTH, -3, a.ProductionPeriod)) AS FiscalYear, 
-SUM(a.ARPC1_CADGJ * b.GAS_CrownInterestHeatContent_000GJ) AS GasValue, 
-SUM (a.ARPC1_CADGJ * (b.C2SP_CrownInterestHeatContent_000GJ + b.C2MX_CrownInterestHeatContent_000GJ)) AS C2Value,   
-SUM (b.C3MXReferencePrice_CADperM3 * b.C3MX_CrownInterestQuantity_000M3 + b.C3SPReferencePrice_CADperM3 * b.C3SP_CrownInterestQuantity_000M3) AS C3Value,
-SUM (b.C4MXReferencePrice_CADperM3 * b.C4MX_CrownInterestQuantity_000M3 + b.C4SPReferencePrice_CADperM3 * b.C4SP_CrownInterestQuantity_000M3) AS C4Value,
-SUM (b.C5MXReferencePrice_CADperM3 * b.C5MX_CrownInterestQuantity_000M3 + b.C5SPReferencePrice_CADperM3 * b.C5SP_CrownInterestQuantity_000M3) AS C5Value, 
-SUM (b.SUL_CrownInterestQuantityl_000t * b.SulphurDefaultPrice_CADperTON) AS SUL_Value,
-SUM (c.LTotalCrownProd) AS LOILPrdn, SUM (c.MTotalCrownProd) AS MOILPrdn, SUM (c.HTotalCrownProd) AS HOILPrdn, SUM (c.UTotalCrownProd) AS UOILPrdnrice 
+SUM(a.ARPC1_CADGJ * b.GAS_CrownInterestHeatContent_000GJ)*1000 AS GasValue, 
+SUM (a.ARPC1_CADGJ * (b.C2SP_CrownInterestHeatContent_000GJ + b.C2MX_CrownInterestHeatContent_000GJ))*1000 AS C2Value,   
+SUM (b.C3MXReferencePrice_CADperM3 * b.C3MX_CrownInterestQuantity_000M3 + b.C3SPReferencePrice_CADperM3 * b.C3SP_CrownInterestQuantity_000M3)*1000 AS C3Value,
+SUM (b.C4MXReferencePrice_CADperM3 * b.C4MX_CrownInterestQuantity_000M3 + b.C4SPReferencePrice_CADperM3 * b.C4SP_CrownInterestQuantity_000M3)*1000 AS C4Value,
+SUM (b.C5MXReferencePrice_CADperM3 * b.C5MX_CrownInterestQuantity_000M3 + b.C5SPReferencePrice_CADperM3 * b.C5SP_CrownInterestQuantity_000M3)*1000 AS C5Value, 
+SUM (b.SUL_CrownInterestQuantityl_000t * b.SulphurDefaultPrice_CADperTON)*1000 AS SUL_Value,
+SUM (c.LTotalCrownProd) AS LOILPrdn, SUM (c.MTotalCrownProd) AS MOILPrdn, SUM (c.HTotalCrownProd) AS HOILPrdn, SUM (c.UTotalCrownProd) AS UOILPrdnrice  -- PROD ONLY, NOT VALUE  
 FROM ufxeadOSMonthlyViewTVF (getUTCdate()) a LEFT JOIN ufxeadGasTVF (getUTCdate()) b ON a.ProductionPeriod=b.ProductionPeriod  LEFT JOIN ufxeadOilProductionTVF (getUTCdate()) c ON a.ProductionPeriod=c.ProductionPeriod
 WHERE YEAR(a.ProductionPeriod)>2020 AND YEAR(a.ProductionPeriod)<2023
 GROUP BY DATEPART(YEAR, DATEADD(MONTH, -3, a.ProductionPeriod)) 
