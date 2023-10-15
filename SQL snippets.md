@@ -197,7 +197,7 @@ WHERE CASE
       END = 1
 
       
-**Crown Gas, NGLs, Sulphur & Oil fiscal**
+**Crown Gas, NGLs, Sulphur: Producer Revenue & L/M/H/UH Oil Production: Fiscal Year**
 --Server: EIPDB99S
 USE EAD_PROD 
 SELECT DATEPART(YEAR, DATEADD(MONTH, -3, a.ProductionPeriod)) AS FiscalYear, 
@@ -220,3 +220,12 @@ SUM (GAS_RoyaltyLiableHeatContent_ARF_000GJ+GAS_RoyaltyLiableHeatContent_MRF_000
 FROM ufxeadGasTVF (getUTCdate()) a
 WHERE YEAR(a.ProductionPeriod)>2021 AND YEAR(a.ProductionPeriod) <2024
 GROUP BY DATEPART(YEAR, DATEADD(MONTH, -3, a.ProductionPeriod)) 
+
+**C5 Gross Royalties ARF/MRF by Fiscal Year**
+--Server: EIPDB99S
+USE EAD_PROD 
+SELECT DATEPART(YEAR, a.ProductionPeriod) AS CalendarYear, -- DATEPART(YEAR, DATEADD(MONTH, -3, a.ProductionPeriod))  AS FiscalYear, 
+SUM( C5_GrossRoyaltyRevenue_ARF_000CAD *1000), SUM(C5_GrossRoyaltyRevenue_PRE_MRF_CAD), SUM(C5_GrossRoyaltyRevenue_POST_MRF_CAD), SUM(C5_GrossRoyaltyRevenue_MATURE_MRF_CAD)
+FROM ufxeadOSMonthlyViewTVF (getUTCdate()) a LEFT JOIN ufxeadGasTVF (getUTCdate()) b ON a.ProductionPeriod=b.ProductionPeriod  LEFT JOIN ufxeadOilProductionTVF (getUTCdate()) c ON a.ProductionPeriod=c.ProductionPeriod
+WHERE YEAR(a.ProductionPeriod)>2020 AND YEAR(a.ProductionPeriod)<2024
+GROUP BY DATEPART(YEAR, a.ProductionPeriod)  -- DATEPART(YEAR, DATEADD(MONTH, -3, a.ProductionPeriod)) 
