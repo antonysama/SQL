@@ -229,3 +229,10 @@ SUM( C5_GrossRoyaltyRevenue_ARF_000CAD *1000), SUM(C5_GrossRoyaltyRevenue_PRE_MR
 FROM ufxeadOSMonthlyViewTVF (getUTCdate()) a LEFT JOIN ufxeadGasTVF (getUTCdate()) b ON a.ProductionPeriod=b.ProductionPeriod  LEFT JOIN ufxeadOilProductionTVF (getUTCdate()) c ON a.ProductionPeriod=c.ProductionPeriod
 WHERE YEAR(a.ProductionPeriod)>2020 AND YEAR(a.ProductionPeriod)<2024
 GROUP BY DATEPART(YEAR, a.ProductionPeriod)  -- DATEPART(YEAR, DATEADD(MONTH, -3, a.ProductionPeriod)) 
+
+**Query Oil for Par Price and Net Remmittance**
+--Server: EIPDB99S
+USE EAD_PROD 
+SELECT a.ProductionPeriod, a.LightParPrice, a.MediumParPrice, a.HeavyParPrice, a.UHeavyParPrice, a.EdmontonParPrice ,a.NetRemittance000CAD
+FROM  ufxeadOilProductionTVF (getUTCdate()) a
+WHERE YEAR(a.ProductionPeriod)>2022 AND YEAR(a.ProductionPeriod)<2024
