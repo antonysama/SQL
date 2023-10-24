@@ -236,3 +236,10 @@ USE EAD_PROD
 SELECT a.ProductionPeriod, a.LightParPrice, a.MediumParPrice, a.HeavyParPrice, a.UHeavyParPrice, a.EdmontonParPrice ,a.NetRemittance000CAD
 FROM  ufxeadOilProductionTVF (getUTCdate()) a
 WHERE YEAR(a.ProductionPeriod)>2022 AND YEAR(a.ProductionPeriod)<2024
+
+
+**Query table with NPR data**
+DECLARE @AsOfDate AS DATETIME2 = '2023-01-1';
+SELECT *
+FROM ufxeadOSMonthlyViewTVF (@AsOfDate) a
+WHERE YEAR(a.ProductionPeriod)>2020 
