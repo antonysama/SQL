@@ -243,3 +243,11 @@ DECLARE @AsOfDate AS DATETIME2 = '2023-01-1';
 SELECT *
 FROM ufxeadOSMonthlyViewTVF (@AsOfDate) a
 WHERE YEAR(a.ProductionPeriod)>2020 
+
+**Annual Average Actual Relief that determines EORP cost**
+SELECT YEAR([t51031ProductionPeriod]) AS Production_Year,
+       AVG([t51031ActualRelief]) AS Annual_Average_Actual_Relief
+FROM [EAD_PROD].[dbo].[eadOilEnhancedRecoveryProgramRoyaltyV51031]
+WHERE [t51031ProductionPeriod] BETWEEN '2021-01-01' AND '2024-03-31'
+GROUP BY YEAR([t51031ProductionPeriod])
+ORDER BY Production_Year;
