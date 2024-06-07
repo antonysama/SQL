@@ -251,3 +251,12 @@ FROM [EAD_PROD].[dbo].[eadOilEnhancedRecoveryProgramRoyaltyV51031]
 WHERE [t51031ProductionPeriod] BETWEEN '2021-01-01' AND '2024-03-31'
 GROUP BY YEAR([t51031ProductionPeriod])
 ORDER BY Production_Year;
+
+***GCA***
+SELECT DATEPART(YEAR, a.ProductionPeriod) AS Year, SUM(MonthlyOpCostDeduction_CAD + ISNULL(AnnualOpCostAdjustment_CAD, 0))/1000  AS UOCRAdjusted_000CAD,
+SUM(MonthlyCCDeduction_CAD + ISNULL(AnnualCapitalCostAdjustment_CAD, 0))/1000  AS  CCAAdjusted_000CAD, 
+SUM(MonthlyCPFeeDeduction_CAD + ISNULL(AnnualCustomProcssngFeeAdj_CAD, 0))/1000  AS  CPFAdjusted_000CAD,
+SUM(AllowableCostRestriction_CAD  + ISNULL(AnnualAllowCostRestrctnAdj_CAD, 0))/1000  AS  AllowCostRestrictAdjusted_000CAD
+FROM ufxeadGasTVF (getUTCdate()) a
+WHERE YEAR(a.ProductionPeriod)>2016 AND YEAR(a.ProductionPeriod) <2025
+GROUP BY DATEPART(YEAR, a.ProductionPeriod)
