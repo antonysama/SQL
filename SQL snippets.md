@@ -260,3 +260,10 @@ SUM(AllowableCostRestriction_CAD  + ISNULL(AnnualAllowCostRestrctnAdj_CAD, 0))/1
 FROM ufxeadGasTVF (getUTCdate()) a
 WHERE YEAR(a.ProductionPeriod)>2016 AND YEAR(a.ProductionPeriod) <2025
 GROUP BY DATEPART(YEAR, a.ProductionPeriod)
+
+SELECT a.ProductionYear, InvoicedOPA_ByNetOPA, EOR_RecaptureForCPAF_000CAD, DirectAllowableOperatingCosts_000CAD, CustomProcessingAllocationFactorForOP_000CAD,Overhead_000CAD, WorkingCapitalAllowance_000CAD,  GreenhouseGasEmissionComplianceCost_000CAD, NetOPA_000CAD, HistoryicalGasWellConnections, NewFacilities_000CAD, CapitalAdditions_000CAD, DepreciationRatePercent, ClosingCapital_000CAD, Retirements_000CAD, ReturnOnAvgCapitalByClosingCapital, CustomProcessingAllocationFactorForCCA_000CAD,EOR_RecaptureForCCA_000CAD, RPB_RecaptureForCCA_000CAD, InvoicedCCA_ByNetCCA,AC5CP_Fees_000CAD, OperatingCostRecapture_000CAD, EOR_RecaptureForCP_000CAD,RPB_RecaptureForCP_000CAD, InvoicedCPA_By_AC5CP_Fees
+FROM ufxeadGasAnnualTVF (getUTCdate()) a
+WHERE a.ProductionYear>2016 AND a.ProductionYear <2025
+GROUP BY a.ProductionYear,InvoicedOPA_ByNetOPA, EOR_RecaptureForCPAF_000CAD, DirectAllowableOperatingCosts_000CAD, CustomProcessingAllocationFactorForOP_000CAD,
+Overhead_000CAD, WorkingCapitalAllowance_000CAD,  GreenhouseGasEmissionComplianceCost_000CAD, NetOPA_000CAD, HistoryicalGasWellConnections, NewFacilities_000CAD,
+CapitalAdditions_000CAD, DepreciationRatePercent, ClosingCapital_000CAD, Retirements_000CAD, ReturnOnAvgCapitalByClosingCapital, CustomProcessingAllocationFactorForCCA_000CAD, EOR_RecaptureForCCA_000CAD, RPB_RecaptureForCCA_000CAD, InvoicedCCA_ByNetCCA,AC5CP_Fees_000CAD, OperatingCostRecapture_000CAD, EOR_RecaptureForCP_000CAD, RPB_RecaptureForCP_000CAD, InvoicedCPA_By_AC5CP_Fees
