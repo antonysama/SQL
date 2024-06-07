@@ -252,7 +252,7 @@ WHERE [t51031ProductionPeriod] BETWEEN '2021-01-01' AND '2024-03-31'
 GROUP BY YEAR([t51031ProductionPeriod])
 ORDER BY Production_Year;
 
-***GCA***
+***GCA monthly***
 SELECT DATEPART(YEAR, a.ProductionPeriod) AS Year, SUM(MonthlyOpCostDeduction_CAD + ISNULL(AnnualOpCostAdjustment_CAD, 0))/1000  AS UOCRAdjusted_000CAD,
 SUM(MonthlyCCDeduction_CAD + ISNULL(AnnualCapitalCostAdjustment_CAD, 0))/1000  AS  CCAAdjusted_000CAD, 
 SUM(MonthlyCPFeeDeduction_CAD + ISNULL(AnnualCustomProcssngFeeAdj_CAD, 0))/1000  AS  CPFAdjusted_000CAD,
@@ -261,6 +261,7 @@ FROM ufxeadGasTVF (getUTCdate()) a
 WHERE YEAR(a.ProductionPeriod)>2016 AND YEAR(a.ProductionPeriod) <2025
 GROUP BY DATEPART(YEAR, a.ProductionPeriod)
 
+***GCA annual***
 SELECT a.ProductionYear, InvoicedOPA_ByNetOPA, EOR_RecaptureForCPAF_000CAD, DirectAllowableOperatingCosts_000CAD, CustomProcessingAllocationFactorForOP_000CAD,Overhead_000CAD, WorkingCapitalAllowance_000CAD,  GreenhouseGasEmissionComplianceCost_000CAD, NetOPA_000CAD, HistoryicalGasWellConnections, NewFacilities_000CAD, CapitalAdditions_000CAD, DepreciationRatePercent, ClosingCapital_000CAD, Retirements_000CAD, ReturnOnAvgCapitalByClosingCapital, CustomProcessingAllocationFactorForCCA_000CAD,EOR_RecaptureForCCA_000CAD, RPB_RecaptureForCCA_000CAD, InvoicedCCA_ByNetCCA,AC5CP_Fees_000CAD, OperatingCostRecapture_000CAD, EOR_RecaptureForCP_000CAD,RPB_RecaptureForCP_000CAD, InvoicedCPA_By_AC5CP_Fees
 FROM ufxeadGasAnnualTVF (getUTCdate()) a
 WHERE a.ProductionYear>2016 AND a.ProductionYear <2025
